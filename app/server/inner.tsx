@@ -1,13 +1,9 @@
-"use client";
+'use client';
 
-import { Preloaded, useMutation, usePreloadedQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { Preloaded, useMutation, usePreloadedQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 
-export default function Home({
-  preloaded,
-}: {
-  preloaded: Preloaded<typeof api.myFunctions.listNumbers>;
-}) {
+export default function Home({ preloaded }: { preloaded: Preloaded<typeof api.myFunctions.listNumbers> }) {
   const data = usePreloadedQuery(preloaded);
   const addNumber = useMutation(api.myFunctions.addNumber);
   return (

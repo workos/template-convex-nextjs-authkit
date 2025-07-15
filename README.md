@@ -13,6 +13,7 @@ After the initial setup (<2 minutes) you'll have a working full-stack app using:
 ## Get started
 
 1. Clone this repository and install dependencies:
+
    ```bash
    npm install
    ```
@@ -21,7 +22,6 @@ After the initial setup (<2 minutes) you'll have a working full-stack app using:
    ```bash
    cp .env.local.example .env.local
    ```
-   
 3. Configure WorkOS AuthKit:
    - Create a [WorkOS account](https://workos.com/)
    - Get your Client ID and API Key from the WorkOS dashboard
@@ -30,24 +30,30 @@ After the initial setup (<2 minutes) you'll have a working full-stack app using:
    - Update your `.env.local` file with these values
 
 4. Configure Convex:
+
    ```bash
    npx convex dev
    ```
+
    This will:
    - Set up your Convex deployment
    - Add your Convex URL to `.env.local`
    - Open the Convex dashboard
-   
+
    Then configure WorkOS authentication in Convex:
+
    ```bash
    npx convex auth add workos
    ```
+
    This creates `convex/auth.config.ts` with WorkOS integration
 
 5. Run the development server:
+
    ```bash
    npm run dev
    ```
+
    This starts both the Next.js frontend and Convex backend in parallel
 
 6. Open [http://localhost:3000](http://localhost:3000) to see your app

@@ -1,6 +1,6 @@
-import { v } from "convex/values";
-import { query, mutation, action } from "./_generated/server";
-import { api } from "./_generated/api";
+import { v } from 'convex/values';
+import { query, mutation, action } from './_generated/server';
+import { api } from './_generated/api';
 
 // Write your Convex functions in any file inside this directory (`convex`).
 // See https://docs.convex.dev/functions for more.
@@ -17,9 +17,9 @@ export const listNumbers = query({
     //// Read the database as many times as you need here.
     //// See https://docs.convex.dev/database/reading-data.
     const numbers = await ctx.db
-      .query("numbers")
+      .query('numbers')
       // Ordered by _creationTime, return most recent
-      .order("desc")
+      .order('desc')
       .take(args.count);
     return {
       viewer: (await ctx.auth.getUserIdentity())?.name ?? null,
@@ -41,9 +41,9 @@ export const addNumber = mutation({
     //// Mutations can also read from the database like queries.
     //// See https://docs.convex.dev/database/writing-data.
 
-    const id = await ctx.db.insert("numbers", { value: args.value });
+    const id = await ctx.db.insert('numbers', { value: args.value });
 
-    console.log("Added new document with id:", id);
+    console.log('Added new document with id:', id);
     // Optionally, return a value from your mutation.
     // return id;
   },
