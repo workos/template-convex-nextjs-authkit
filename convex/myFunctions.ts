@@ -22,7 +22,7 @@ export const listNumbers = query({
       .order('desc')
       .take(args.count);
     return {
-      viewer: (await ctx.auth.getUserIdentity())?.name ?? null,
+      viewer: (await ctx.auth.getUserIdentity())?.subject ?? null,
       numbers: numbers.reverse().map((number) => number.value),
     };
   },
