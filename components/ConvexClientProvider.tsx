@@ -20,7 +20,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
 function useAuthFromAuthKit() {
   const { user, loading: isLoading } = useAuth();
   const { accessToken, loading: tokenLoading, error: tokenError } = useAccessToken();
-  const loading = (isLoading ?? false) || (tokenLoading ?? false);
+  const loading = (isLoading ?? false) || (tokenLoading ?? false) || !accessToken;
   const authenticated = !!user && !!accessToken && !loading;
 
   // Memoize the token to prevent unnecessary changes
