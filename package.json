@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@workos-inc/authkit-nextjs": "^2.4.4",
-    "convex": "^1.25.4",
+    "convex": "^1.26.2",
     "next": "15.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

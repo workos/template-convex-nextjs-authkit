@@ -50,11 +50,7 @@ function Content() {
   const addNumber = useMutation(api.myFunctions.addNumber);
 
   if (viewer === undefined || numbers === undefined) {
-    return (
-      <div className="mx-auto">
-        <p>loading... (consider a loading skeleton)</p>
-      </div>
-    );
+    return <div className="mx-auto"></div>;
   }
 
   return (
