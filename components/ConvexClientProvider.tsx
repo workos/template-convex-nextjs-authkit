@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useCallback, useRef, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithAuth } from 'convex/react';
 import { AuthKitProvider, useAuth, useAccessToken } from '@workos-inc/authkit-nextjs/components';
@@ -19,30 +19,36 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
 }
 
 function useAuthFromAuthKit() {
-  const { user, loading: isLoading } = useAuth();
-  const { accessToken, loading: tokenLoading, error: tokenError } = useAccessToken();
+  const { user, loading } = useAuth();
+  const { accessToken, getAccessToken, refresh } = useAccessToken();
+
   const hasIncompleteAuth = (!!user && !accessToken) || (!user && !!accessToken);
-  const loading = (isLoading ?? false) || (tokenLoading ?? false) || hasIncompleteAuth;
+  const isLoading = loading || hasIncompleteAuth;
   const authenticated = !!user && !!accessToken;
 
-  // Memoize the token to prevent unnecessary changes
-  const stableAccessToken = useRef<string | null>(null);
-  if (accessToken && !tokenError) {
-    stableAccessToken.current = accessToken;
-  }
+  // Create a stable fetchAccessToken function
+  const fetchAccessToken = useCallback(
+    async ({ forceRefreshToken }: { forceRefreshToken?: boolean } = {}): Promise<string | null> => {
+      if (!user) {
+        return null;
+      }
 
-  const fetchAccessToken = useCallback(async () => {
-    // WorkOS AuthKit automatically refreshes tokens before they expire,
-    // so we don't need to manually handle forceRefreshToken to avoid infinite loops.
-    // This is the recommended approach for WorkOS + Convex integration.
-    if (stableAccessToken.current && !tokenError) {
-      return stableAccessToken.current;
-    }
-    return null;
-  }, [tokenError]);
+      try {
+        if (forceRefreshToken) {
+          return (await refresh()) ?? null;
+        }
+
+        return (await getAccessToken()) ?? null;
+      } catch (error) {
+        console.error('Failed to get access token:', error);
+        return null;
+      }
+    },
+    [user, refresh, getAccessToken],
+  );
 
   return {
-    isLoading: loading,
+    isLoading,
     isAuthenticated: authenticated,
     fetchAccessToken,
   };
