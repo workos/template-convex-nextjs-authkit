@@ -19,14 +19,11 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
 }
 
 function useAuthFromAuthKit() {
-  const { user, loading } = useAuth();
+  const { user, loading: isLoading } = useAuth();
   const { accessToken, getAccessToken, refresh } = useAccessToken();
 
-  const hasIncompleteAuth = (!!user && !accessToken) || (!user && !!accessToken);
-  const isLoading = loading || hasIncompleteAuth;
   const authenticated = !!user && !!accessToken;
 
-  // Create a stable fetchAccessToken function
   const fetchAccessToken = useCallback(
     async ({ forceRefreshToken }: { forceRefreshToken?: boolean } = {}): Promise<string | null> => {
       if (!user) {
