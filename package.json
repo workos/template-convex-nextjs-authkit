@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "homepage": "https://github.com/workos/template-convex-nextjs-authkit/#readme",
+  "convex-authkit-auto-provisioning": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/workos/template-convex-nextjs-authkit.git"
@@ -23,7 +24,7 @@
   },
   "dependencies": {
     "@workos-inc/authkit-nextjs": "^2.7.1",
-    "convex": "^1.27.2",
+    "convex": "^1.27.3",
     "next": "15.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
