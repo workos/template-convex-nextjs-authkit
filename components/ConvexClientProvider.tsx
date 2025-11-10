@@ -26,6 +26,8 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
   });
 
   return (
+    // Prevent AuthKit's default window.location.reload() on session expiration.
+    // We handle auth state gracefully via Convex token refresh and middleware checks.
     <AuthKitProvider onSessionExpired={noop}>
       <ConvexProviderWithAuth client={convex} useAuth={useAuthFromAuthKit}>
         {children}
