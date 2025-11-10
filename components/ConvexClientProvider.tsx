@@ -26,7 +26,7 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
 
 function useAuthFromAuthKit() {
   const { user, loading: isLoading } = useAuth();
-  const { getAccessToken, accessToken } = useAccessToken();
+  const { getAccessToken, accessToken, refresh } = useAccessToken();
   const accessTokenRef = useRef<string | undefined>(undefined);
   accessTokenRef.current = accessToken;
 
@@ -39,7 +39,9 @@ function useAuthFromAuthKit() {
       }
 
       try {
-        return (await getAccessToken()) ?? null;
+        // If Convex requests a forced refresh (e.g., token was rejected by server),
+        // always get a fresh token. Otherwise, return cached token if still valid.
+        return forceRefreshToken ? ((await refresh()) ?? null) : ((await getAccessToken()) ?? null);
       } catch (error) {
         // On network errors during laptop wake, fall back to cached token.
         // Even if expired, Convex will treat it like null and clear auth.
@@ -48,7 +50,7 @@ function useAuthFromAuthKit() {
         return accessTokenRef.current ?? null;
       }
     },
-    [user, getAccessToken],
+    [user, getAccessToken, refresh],
   );
 
   return {
