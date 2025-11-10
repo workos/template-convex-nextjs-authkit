@@ -1,23 +1,11 @@
 'use client';
 
-import { ReactNode, useCallback, useState, useRef, useEffect } from 'react';
+import { ReactNode, useCallback, useState, useRef } from 'react';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithAuth } from 'convex/react';
 import { AuthKitProvider, useAuth, useAccessToken } from '@workos-inc/authkit-nextjs/components';
 
 const noop = () => {};
-
-const isTokenValid = (token: string | undefined): boolean => {
-  if (!token) return false;
-
-  try {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    // Token is valid if it hasn't expired yet (with small buffer for clock skew)
-    return payload.exp * 1000 > Date.now() + 5000;
-  } catch {
-    return false;
-  }
-};
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
   const [convex] = useState(() => {
@@ -39,14 +27,10 @@ export function ConvexClientProvider({ children }: { children: ReactNode }) {
 function useAuthFromAuthKit() {
   const { user, loading: isLoading } = useAuth();
   const { getAccessToken, accessToken } = useAccessToken();
-  const accessTokenRef = useRef<string | undefined>(accessToken);
+  const accessTokenRef = useRef<string | undefined>(undefined);
+  accessTokenRef.current = accessToken;
 
   const isAuthenticated = !!user;
-
-  // Keep ref updated with latest token
-  useEffect(() => {
-    accessTokenRef.current = accessToken;
-  }, [accessToken]);
 
   const fetchAccessToken = useCallback(
     async ({ forceRefreshToken }: { forceRefreshToken?: boolean } = {}): Promise<string | null> => {
@@ -57,12 +41,11 @@ function useAuthFromAuthKit() {
       try {
         return (await getAccessToken()) ?? null;
       } catch (error) {
-        const cachedToken = accessTokenRef.current;
-        if (isTokenValid(cachedToken)) {
-          console.log('[Convex Auth] Using cached token during network issues');
-          return cachedToken!;
-        }
-        return null;
+        // On network errors during laptop wake, fall back to cached token.
+        // Even if expired, Convex will treat it like null and clear auth.
+        // AuthKit's tokenStore schedules automatic retries in the background.
+        console.log('[Convex Auth] Using cached token during network issues');
+        return accessTokenRef.current ?? null;
       }
     },
     [user, getAccessToken],
