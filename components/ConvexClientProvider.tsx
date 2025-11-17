@@ -28,7 +28,9 @@ function useAuthFromAuthKit() {
   const { user, loading: isLoading } = useAuth();
   const { getAccessToken, accessToken, refresh } = useAccessToken();
   const accessTokenRef = useRef<string | undefined>(undefined);
-  accessTokenRef.current = accessToken;
+  useEffect(() => {
+    accessTokenRef.current = accessToken;
+  }, [accessToken]);
 
   const isAuthenticated = !!user;
 
