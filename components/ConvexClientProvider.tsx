@@ -44,7 +44,7 @@ function useAuthFromAuthKit() {
         // If Convex requests a forced refresh (e.g., token was rejected by server),
         // always get a fresh token. Otherwise, return cached token if still valid.
         return forceRefreshToken ? ((await refresh()) ?? null) : ((await getAccessToken()) ?? null);
-      } catch (error) {
+      } catch {
         // On network errors during laptop wake, fall back to cached token.
         // Even if expired, Convex will treat it like null and clear auth.
         // AuthKit's tokenStore schedules automatic retries in the background.
