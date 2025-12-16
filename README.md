@@ -1,3 +1,14 @@
+> [!CAUTION]
+> **This repository has been archived**
+>
+> This template is no longer maintained here. It has moved to the official Convex templates repository:
+>
+> **https://github.com/get-convex/templates/tree/main/template-nextjs-authkit**
+>
+> Please use the new location for all future projects and contributions.
+
+---
+
 # Welcome to your Convex + Next.js + WorkOS AuthKit app
 
 This is a [Convex](https://convex.dev/) project migrated to use WorkOS AuthKit for authentication.
